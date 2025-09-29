@@ -10,56 +10,286 @@
     <link rel="shortcut icon" href="Imagens/icone_logo.png" type="image/x-icon">
 </head>
 <body>
-    <div class="container">
-        <div class="content first-content">
-   <!--FORMULÁRIO DE CADASTRO-->
-      <div id="cadastro">
-        <form method="post" action=""> 
-          <h1>Torne-se um voluntário</h1> 
-          <p> 
-            <label for="nome_cad">Seu nome</label>
-            <input id="nome_cad" name="nome_cad" required="required" type="text" placeholder="Nome" />
-          </p>
+  <!-- Container Principal do Formulário -->
+  <div class="container-wrapper">
 
-           <p><label for="cpf_cad">Cpf (apenas números)</label>
-            <input id="cpf_cad" name="cpf_cad" required="required" type="text" placeholder="000.000.000-00"/>
-          </p>
+      <h1 class="header-title">Registro de Voluntário</h1>
+      <p class="subtitle">
+          Preencha todos os campos obrigatórios (*) para completar seu cadastro no Grupo Amparo e Alívio.
+      </p>
 
-          <p><label for="profissao_cad">Profissão</label>
-           <select name="profissao_cad" id="profissao_cad">
-              <option value="" disabled selected>Selecione sua profissão</option>
-              <option value="medico">Médico</option>
-              <option value="enfermeiro">Enfermeiro</option>
-              <option value="psicologo">Psicólogo</option>
-              <option value="outros">Outros</option>
-            </select>
-          </p>
+      <form id="volunteerForm">
+          <!-- SEÇÃO 1: DADOS PESSOAIS E PROFISSIONAIS -->
+          <div class="section">
+              <h2>1. Dados Pessoais e Profissionais</h2>
+              
+              <div class="input-group">
+                  <!-- Nome Completo (Obrigatório) -->
+                  <div class="form-group col-span-full">
+                      <label for="nome">Nome Completo *</label>
+                      <input type="text" id="nome" name="nome" required class="input-field">
+                  </div>
 
-          <p><label for="regis_conselho">Registro no conselho (apenas numeros)</label>
-            <input id="regis_conselho" name="regis_conselho" required="required" type="text" placeholder="00.000.000-0"/>
-            </p>
+                  <!-- Profissão (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="profissao">Profissão *</label>
+                      <input type="text" id="profissao" name="profissao" required class="input-field">
+                  </div>
 
-            <p><label for="cep_cad">Cep (apenas números)</label>
-              <input id="cep_cad" name="cep_cad" required="required" type="text" placeholder="00000-000"/>
-            </p>
+                  <!-- Registro no Conselho (Opcional) -->
+                  <div class="form-group">
+                      <label for="registro_conselho">Registro no Conselho (CRM, CRP, etc.)</label>
+                      <input type="text" id="registro_conselho" name="registro_conselho" class="input-field">
+                  </div>
+                  
+                  <!-- RG (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="rg">RG *</label>
+                      <input type="text" id="rg" name="rg" required class="input-field">
+                  </div>
+                  
+                  <!-- CPF (Obrigatório, Único) -->
+                  <div class="form-group">
+                      <label for="cpf">CPF *</label>
+                      <input type="text" id="cpf" name="cpf" required class="input-field">
+                  </div>
+              </div>
+          </div>
+
+          <!-- SEÇÃO 2: CONTATOS -->
+          <div class="section">
+              <h2>2. Contatos</h2>
+              
+              <div class="input-group input-group-contact">
+                  <!-- Telefone Pessoal (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="telefone_pessoal">Telefone Pessoal (Celular) *</label>
+                      <input type="tel" id="telefone_pessoal" name="telefone_pessoal" required class="input-field">
+                  </div>
+
+                  <!-- Telefone Residencial (Opcional) -->
+                  <div class="form-group">
+                      <label for="telefone_residencial">Telefone Residencial</label>
+                      <input type="tel" id="telefone_residencial" name="telefone_residencial" class="input-field">
+                  </div>
+
+                  <!-- Telefone do Consultório (Opcional) -->
+                  <div class="form-group">
+                      <label for="telefone_consultorio">Telefone do Consultório</label>
+                      <input type="tel" id="telefone_consultorio" name="telefone_consultorio" class="input-field">
+                  </div>
+              </div>
+          </div>
+
+          <!-- SEÇÃO 3: ENDEREÇO -->
+          <div class="section">
+              <h2>3. Endereço</h2>
+              
+              <div class="input-group input-group-address">
+                  <!-- CEP (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="cep">CEP *</label>
+                      <input type="text" id="cep" name="cep" required class="input-field">
+                  </div>
+                  
+                  <!-- Logradouro (Obrigatório) -->
+                  <div class="form-group col-span-full col-span-3-md">
+                      <label for="logradouro">Logradouro *</label>
+                      <input type="text" id="logradouro" name="logradouro" required class="input-field">
+                  </div>
+
+                  <!-- Número Residencial (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="numero_residencial">Número *</label>
+                      <input type="number" id="numero_residencial" name="numero_residencial" required class="input-field">
+                  </div>
+
+                  <!-- Bairro (Obrigatório) -->
+                  <div class="form-group col-span-full col-span-2-md">
+                      <label for="bairro">Bairro *</label>
+                      <input type="text" id="bairro" name="bairro" required class="input-field">
+                  </div>
+
+                  <!-- Cidade (Obrigatório) -->
+                  <div class="form-group">
+                      <label for="cidade">Cidade *</label>
+                      <input type="text" id="cidade" name="cidade" required class="input-field">
+                  </div>
+              </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMPROMISSO E ATUAÇÃO -->
+          <div class="section">
+              <h2>4. Compromisso e Disponibilidade</h2>
+
+              <!-- Horas Semanais Disponíveis (Opcional) -->
+              <div class="form-group" style="margin-bottom: 1.5rem;">
+                  <label for="horas_semanais_disponiveis">Horas Semanais Disponíveis (Estimativa)</label>
+                  <input type="number" id="horas_semanais_disponiveis" name="horas_semanais_disponiveis" min="1" max="168"
+                          class="input-field col-span-1-half-md">
+              </div>
+
+              <!-- Área(s) de Atuação (Obrigatório) -->
+              <div style="margin-bottom: 2rem;">
+                  <label class="block-label" style="margin-bottom: 0.5rem;">Área(s) de Atuação * (Selecione ao menos uma)</label>
+                  <div class="checkbox-container">
+                      <!-- Checkboxes simulando dados da tabela area_atuacao -->
+                      <label class="checkbox-label">
+                          <input type="checkbox" name="area_atuacao" value="medico" required>
+                          <span>Médico</span>
+                      </label>
+                      <label class="checkbox-label">
+                          <input type="checkbox" name="area_atuacao" value="psicologo">
+                          <span>Psicólogo</span>
+                      </label>
+                      <label class="checkbox-label">
+                          <input type="checkbox" name="area_atuacao" value="Nada">
+                          <span>Nada</span>
+                      </label>
+                      <label class="checkbox-label">
+                          <input type="checkbox" name="area_atuacao" value="Nada">
+                          <span>Nada</span>
+                      </label>
+                  </div>
+              </div>
+              
+              <!-- Disponibilidade de Horário (Obrigatório) -->
+              <div>
+                  <label class="block-label" style="margin-bottom: 0.5rem;">Disponibilidade de Horário * (Adicione um ou mais slots)</label>
+                  <div class="disponibilidade-adder">
+                      <select id="dia_semana" class="input-field">
+                          <option value="">Selecione o Dia</option>
+                          <option value="Segunda-feira">Segunda-feira</option>
+                          <option value="Terça-feira">Terça-feira</option>
+                          <option value="Quarta-feira">Quarta-feira</option>
+                          <option value="Quinta-feira">Quinta-feira</option>
+                          <option value="Sexta-feira">Sexta-feira</option>
+                          <option value="Sábado">Sábado</option>
+                          <option value="Domingo">Domingo</option>
+                      </select>
+                      <input type="time" id="horario" class="input-field">
+                      <button type="button" id="adicionar-slot" class="btn btn-secondary">
+                          Adicionar Slot
+                      </button>
+                  </div>
+          </div>
+
+          <!-- Botão de Cadastro -->
+          <button type="submit" class="btn btn-primary">
+              Finalizar Cadastro
+          </button>
+      </form>
+  </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('volunteerForm');
+        const addButton = document.getElementById('adicionar-slot');
+        const slotContainer = document.getElementById('disponibilidade-container');
+        const placeholderDisponibilidade = document.getElementById('placeholder-disponibilidade');
+        const hasDisponibilidade = document.getElementById('has_disponibilidade');
+        
+        let slots = [];
+
+        const cpfInput = document.getElementById('cpf');
+        cpfInput.addEventListener('input', (e) => maskInput(e.target, "###.###.###-##"));
+
+        const cepInput = document.getElementById('cep');
+        cepInput.addEventListener('input', (e) => maskInput(e.target, "#####-###"));
+
+        // --- LÓGICA DE DISPONIBILIDADE ---
+        
+        function updateDisponibilidadeValidation() {
+            if (slots.length > 0) {
+                placeholderDisponibilidade.classList.add('hidden');
+                hasDisponibilidade.removeAttribute('required'); // Remove o required se tiver itens
+            } else {
+                placeholderDisponibilidade.classList.remove('hidden');
+                hasDisponibilidade.setAttribute('required', 'required'); // Adiciona o required se estiver vazio
+            }
+        }
+        
+        function renderSlots() {
+            slotContainer.innerHTML = '';
+            if (slots.length === 0) {
+                placeholderDisponibilidade.classList.remove('hidden');
+                slotContainer.appendChild(placeholderDisponibilidade);
+            } else {
+                placeholderDisponibilidade.classList.add('hidden');
+            }
+
+            slots.forEach((slot, index) => {
+                const div = document.createElement('div');
+                div.className = 'slot-item';
+                div.innerHTML = `
+                    <span>${slot.dia} - ${slot.horario}</span>
+                    <button type="button" data-index="${index}">
+                        &times;
+                    </button>
+                `;
+                slotContainer.appendChild(div);
+            });
+
+            // Adiciona listener para o botão de remoção
+            slotContainer.querySelectorAll('button').forEach(btn => {
+                btn.onclick = (e) => {
+                    const indexToRemove = parseInt(e.target.dataset.index);
+                    slots.splice(indexToRemove, 1);
+                    renderSlots();
+                    updateDisponibilidadeValidation();
+                };
+            });
             
-           <p> 
-            <label for="rg_cad">Rg (apenas números)</label>
-            <input id="rg_cad" name="rg_cad" required="required" type="text" placeholder="00.000.000-0"/> 
-          </p>
-           
-          <p> 
-            <label for="senha_cad">Sua senha</label>
-            <input id="senha_cad" name="senha_cad" required="required" type="password" placeholder="ex. 1234"/>
-          </p>
-           
-          <p> 
-            <input type="submit" value="Enviar"/> 
-          </p>
-           
-        </form>
-      </div>
-    </div>
-  </div>  
+            updateDisponibilidadeValidation();
+        }
+
+        addButton.addEventListener('click', () => {
+            const diaSelect = document.getElementById('dia_semana');
+            const horarioInput = document.getElementById('horario');
+            
+            const dia = diaSelect.value;
+            const horario = horarioInput.value;
+
+            if (dia && horario) {
+                const newSlot = { dia, horario };
+                // Verifica se o slot já existe para evitar duplicatas
+                const isDuplicate = slots.some(s => s.dia === dia && s.horario === horario);
+                
+                if (isDuplicate) {
+                    showModal('Erro na Adição', 'Este slot de disponibilidade já foi adicionado.', 'modal-title-error');
+                    return;
+                }
+
+                slots.push(newSlot);
+                renderSlots();
+                
+                // Limpa os campos de input após adicionar
+                diaSelect.value = "";
+                horarioInput.value = "";
+            } else {
+                showModal('Campos Vazios', 'Por favor, selecione o dia e o horário.', 'modal-title-error');
+            }
+        });
+            
+            // Simulação de coleta de dados para envio
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Adiciona a lista de slots de disponibilidade
+            data.disponibilidade = slots;
+            
+            // Adiciona a lista de áreas de atuação
+            data.areas_atuacao = Array.from(areaCheckboxes).map(cb => cb.value);
+
+            console.log("Dados do Voluntário Coletados:", data);
+            
+            // Exibe modal de sucesso
+            showModal('Cadastro Efetuado', 'Obrigado! Seu cadastro foi enviado com sucesso e será analisado pela nossa equipe.', 'modal-title-success');
+            
+            // Limpa o formulário após o envio
+            form.reset();
+            slots = [];
+            renderSlots();
+        });
+</script>
 </body>
 </html>
