@@ -11,14 +11,13 @@
 </head>
 <body>
   <!-- Container Principal do Formulário -->
-  <div class="container-wrapper">
-
+  <div class="container-principal">
       <h1 class="header-title">Registro de Voluntário</h1>
       <p class="subtitle">
           Preencha todos os campos obrigatórios (*) para completar seu cadastro no Grupo Amparo e Alívio.
       </p>
 
-      <form id="volunteerForm">
+      <form id="voluntarioForm">
           <!-- SEÇÃO 1: DADOS PESSOAIS E PROFISSIONAIS -->
           <div class="section">
               <h2>1. Dados Pessoais e Profissionais</h2>
@@ -38,7 +37,7 @@
 
                   <!-- Registro no Conselho (Opcional) -->
                   <div class="form-group">
-                      <label for="registro_conselho">Registro no Conselho (CRM, CRP, etc.)</label>
+                      <label for="registro_conselho">Registro no Conselho (CRM, CRP etc.)</label>
                       <input type="text" id="registro_conselho" name="registro_conselho" class="input-field">
                   </div>
                   
@@ -101,7 +100,7 @@
                   <!-- Número Residencial (Obrigatório) -->
                   <div class="form-group">
                       <label for="numero_residencial">Número *</label>
-                      <input type="number" id="numero_residencial" name="numero_residencial" required class="input-field">
+                      <input type="text" id="numero_residencial" name="numero_residencial" required class="input-field">
                   </div>
 
                   <!-- Bairro (Obrigatório) -->
@@ -135,7 +134,7 @@
                   <div class="checkbox-container">
                       <!-- Checkboxes simulando dados da tabela area_atuacao -->
                       <label class="checkbox-label">
-                          <input type="checkbox" name="area_atuacao" value="medico" required>
+                          <input type="checkbox" name="area_atuacao" value="medico">
                           <span>Médico</span>
                       </label>
                       <label class="checkbox-label">
@@ -158,7 +157,7 @@
                   <label class="block-label" style="margin-bottom: 0.5rem;">Disponibilidade de Horário * (Adicione um ou mais slots)</label>
                   <div class="disponibilidade-adder">
                       <select id="dia_semana" class="input-field">
-                          <option value="">Selecione o Dia</option>
+                          <option value="null">Selecione o dia</option>
                           <option value="Segunda-feira">Segunda-feira</option>
                           <option value="Terça-feira">Terça-feira</option>
                           <option value="Quarta-feira">Quarta-feira</option>
@@ -168,9 +167,6 @@
                           <option value="Domingo">Domingo</option>
                       </select>
                       <input type="time" id="horario" class="input-field">
-                      <button type="button" id="adicionar-slot" class="btn btn-secondary">
-                          Adicionar Slot
-                      </button>
                   </div>
           </div>
 
@@ -180,108 +176,36 @@
           </button>
       </form>
   </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('volunteerForm');
-        const addButton = document.getElementById('adicionar-slot');
         const slotContainer = document.getElementById('disponibilidade-container');
         const placeholderDisponibilidade = document.getElementById('placeholder-disponibilidade');
         const hasDisponibilidade = document.getElementById('has_disponibilidade');
-        
+
         let slots = [];
 
-        const cpfInput = document.getElementById('cpf');
-        cpfInput.addEventListener('input', (e) => maskInput(e.target, "###.###.###-##"));
+        // Inicializa a validação
+        updateDisponibilidadeValidation();
 
-        const cepInput = document.getElementById('cep');
-        cepInput.addEventListener('input', (e) => maskInput(e.target, "#####-###"));
-
-        // --- LÓGICA DE DISPONIBILIDADE ---
-        
-        function updateDisponibilidadeValidation() {
-            if (slots.length > 0) {
-                placeholderDisponibilidade.classList.add('hidden');
-                hasDisponibilidade.removeAttribute('required'); // Remove o required se tiver itens
-            } else {
-                placeholderDisponibilidade.classList.remove('hidden');
-                hasDisponibilidade.setAttribute('required', 'required'); // Adiciona o required se estiver vazio
+        // --- LÓGICA DE ENVIO DO FORMULÁRIO ---
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Validação das áreas de atuação (pelo menos uma deve ser selecionada)
+            const areaCheckboxes = document.querySelectorAll('input[name="area_atuacao"]:checked');
+            if (areaCheckboxes.length === 0) {
+                showModal('Atenção', 'É obrigatório selecionar ao menos uma Área de Atuação.', 'modal-title-error');
+                return;
             }
-        }
-        
-        function renderSlots() {
-            slotContainer.innerHTML = '';
+            
+            // Validação da disponibilidade (pelo menos um slot deve ser adicionado)
             if (slots.length === 0) {
-                placeholderDisponibilidade.classList.remove('hidden');
-                slotContainer.appendChild(placeholderDisponibilidade);
-            } else {
-                placeholderDisponibilidade.classList.add('hidden');
+                showModal('Atenção', 'É obrigatório adicionar ao menos um Slot de Disponibilidade.', 'modal-title-error');
+                return;
             }
-
-            slots.forEach((slot, index) => {
-                const div = document.createElement('div');
-                div.className = 'slot-item';
-                div.innerHTML = `
-                    <span>${slot.dia} - ${slot.horario}</span>
-                    <button type="button" data-index="${index}">
-                        &times;
-                    </button>
-                `;
-                slotContainer.appendChild(div);
-            });
-
-            // Adiciona listener para o botão de remoção
-            slotContainer.querySelectorAll('button').forEach(btn => {
-                btn.onclick = (e) => {
-                    const indexToRemove = parseInt(e.target.dataset.index);
-                    slots.splice(indexToRemove, 1);
-                    renderSlots();
-                    updateDisponibilidadeValidation();
-                };
-            });
-            
-            updateDisponibilidadeValidation();
-        }
-
-        addButton.addEventListener('click', () => {
-            const diaSelect = document.getElementById('dia_semana');
-            const horarioInput = document.getElementById('horario');
-            
-            const dia = diaSelect.value;
-            const horario = horarioInput.value;
-
-            if (dia && horario) {
-                const newSlot = { dia, horario };
-                // Verifica se o slot já existe para evitar duplicatas
-                const isDuplicate = slots.some(s => s.dia === dia && s.horario === horario);
-                
-                if (isDuplicate) {
-                    showModal('Erro na Adição', 'Este slot de disponibilidade já foi adicionado.', 'modal-title-error');
-                    return;
-                }
-
-                slots.push(newSlot);
-                renderSlots();
-                
-                // Limpa os campos de input após adicionar
-                diaSelect.value = "";
-                horarioInput.value = "";
-            } else {
-                showModal('Campos Vazios', 'Por favor, selecione o dia e o horário.', 'modal-title-error');
-            }
-        });
-            
-            // Simulação de coleta de dados para envio
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            
-            // Adiciona a lista de slots de disponibilidade
-            data.disponibilidade = slots;
-            
-            // Adiciona a lista de áreas de atuação
-            data.areas_atuacao = Array.from(areaCheckboxes).map(cb => cb.value);
-
-            console.log("Dados do Voluntário Coletados:", data);
-            
+    
             // Exibe modal de sucesso
             showModal('Cadastro Efetuado', 'Obrigado! Seu cadastro foi enviado com sucesso e será analisado pela nossa equipe.', 'modal-title-success');
             
@@ -290,6 +214,7 @@
             slots = [];
             renderSlots();
         });
+    });
 </script>
 </body>
 </html>
