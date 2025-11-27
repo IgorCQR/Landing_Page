@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="acesso.css">
+    <link rel="shortcut icon" href="../Imagens/icone_logo.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>Acesso Cadastro</title>
+</head>
+<body>
+<!-- PAINEL PRINCIPAL -->
+    <div class="card-container">
+        
+        <div class="header-row">
+            <h1 class="page-title">
+                <div class="icon-bg"><i data-lucide="users-round"></i></div>
+                Gestão de Acessos
+            </h1>
+            <!-- Botão que abre modal VAZIO -->
+            <button class="btn-novo" onclick="openNewModal()">
+                <i data-lucide="plus-circle"></i>
+                Novo Acesso
+            </button>
+        </div>
+
+        <div class="filters-row">
+            <div class="filter-group" style="min-width: 200px;">
+                <label>Filtro:</label>
+                <select class="form-control" id="searchFilter">
+                    <option value="nome">Nome</option>
+                    <option value="email">Email</option>
+                    <option value="perfil">Perfil</option>
+                </select>
+            </div>
+            <div class="filter-group search-group">
+                <label>Pesquisar:</label>
+                <div class="search-icon"><i data-lucide="search" size="18"></i></div>
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nome, email..." onkeyup="filterTable()">
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <div class="status-toggle">
+                    <div class="status-option active" onclick="setStatusFilter('todos', this)">Todos</div>
+                    <div class="status-option" onclick="setStatusFilter('ativos', this)">Ativos</div>
+                    <div class="status-option" onclick="setStatusFilter('inativos', this)">Inativos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela -->
+        <div class="table-wrapper" id="tableContainer">
+            <table id="accessTable">
+                <thead>
+                    <tr>
+                        <th width="30%">Email</th>
+                        <th width="30%">Nome</th>
+                        <th width="15%" class="center-text">Tipo de Usuário</th>
+                        <th width="10%" class="center-text">Status</th>
+                        <th width="15%" class="center-text">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="data-row">
+                        <td class="col-email">admin@techcare.org</td>
+                        <td class="col-nome">Diretoria Geral</td>
+                        <td class="center-text col-perfil">Admin</td>
+                        <td class="center-text" data-status="ativo"><span class="badge-status">Ativo</span></td>
+                        <td class="center-text">
+                            <!-- Botão de Edição com chamada JS -->
+                            <button class="btn-action btn-edit" onclick="openEditModal(this)">
+                                <i data-lucide="pencil" size="16"></i>
+                            </button>
+                            <button class="btn-action btn-delete"><i data-lucide="trash-2" size="16"></i></button>
+                        </td>
+                    </tr>
+                    <tr class="data-row">
+                        <td class="col-email">recepcao@techcare.org</td>
+                        <td class="col-nome">João da Silva</td>
+                        <td class="center-text col-perfil">Atendente</td>
+                        <td class="center-text" data-status="ativo"><span class="badge-status">Ativo</span></td>
+                        <td class="center-text">
+                            <button class="btn-action btn-edit" onclick="openEditModal(this)">
+                                <i data-lucide="pencil" size="16"></i>
+                            </button>
+                            <button class="btn-action btn-delete"><i data-lucide="trash-2" size="16"></i></button>
+                        </td>
+                    </tr>
+                    <tr class="data-row">
+                        <td class="col-email">medico01@techcare.org</td>
+                        <td class="col-nome">Dra. Ana Souza</td>
+                        <td class="center-text col-perfil">Voluntário</td>
+                        <td class="center-text" data-status="inativo"><span class="badge-status inactive">Inativo</span></td>
+                        <td class="center-text">
+                            <button class="btn-action btn-edit" onclick="openEditModal(this)">
+                                <i data-lucide="pencil" size="16"></i>
+                            </button>
+                            <button class="btn-action btn-delete"><i data-lucide="trash-2" size="16"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon"><i data-lucide="cone" size="48"></i></div>
+            <div class="empty-text">Nenhum item encontrado...</div>
+        </div>
+    </div>
+
+    <!-- MODAL (NOVO / EDITAR) -->
+    <div class="modal-overlay" id="modalNovoAcesso">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- Título Dinâmico -->
+                <div class="modal-title" id="modalTitle">
+                    <i data-lucide="user-plus" size="20"></i>
+                    Cadastrar Novo Acesso
+                </div>
+                <button class="btn-close" id="btnCloseX"><i data-lucide="x"></i></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="section-title">
+                    <i data-lucide="credit-card" size="18"></i> Dados Pessoais
+                </div>
+                <div class="form-row">
+                    <div class="input-wrapper">
+                        <label>Nome Completo <span>*</span></label>
+                        <!-- ID Adicionado -->
+                        <input type="text" class="form-control required-field" id="inputNome" placeholder="Nome do usuário">
+                        <span class="helper-text">O nome é obrigatório.</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>E-mail Corporativo <span>*</span></label>
+                        <!-- ID Adicionado -->
+                        <input type="email" class="form-control required-field" id="inputEmail" placeholder="usuario@techcare.org">
+                        <span class="helper-text">E-mail inválido.</span>
+                    </div>
+                </div>
+
+                <div class="divider-line"></div>
+
+                <div class="section-title">
+                    <i data-lucide="shield" size="18"></i> Permissões e Segurança
+                </div>
+                <div class="form-row">
+                    <div class="input-wrapper">
+                        <label>Senha Inicial <span>*</span></label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="senhaInput" placeholder="••••••••">
+                            <span class="input-group-addon" title="Ver Senha" onclick="togglePassword()">
+                                <i data-lucide="eye" size="18" id="eyeIcon"></i>
+                            </span>
+                            <button class="btn-generate" onclick="generatePassword()">Gerar</button>
+                        </div>
+                        <span class="helper-text">Defina uma senha.</span>
+                        <div class="tip-box">
+                            <i data-lucide="info" size="16"></i>
+                            <div>Deixe em branco na edição para manter a atual.</div>
+                        </div>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Perfil de Acesso <span>*</span></label>
+                        <!-- ID Adicionado e Opções Atualizadas -->
+                        <select class="form-control required-field" id="selectPerfil">
+                            <option value="">Selecione...</option>
+                            <option value="admin">Admin</option>
+                            <option value="atendente">Atendente</option>
+                            <option value="voluntario">Voluntário</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" id="btnCancel">Cancelar</button>
+                <button class="btn-modal btn-save" id="btnSave" onclick="validateAndSave()">
+                    <i data-lucide="check" size="18"></i> Salvar Acesso
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializa os ícones Lucide
+        lucide.createIcons();
+
+        const modal = document.getElementById('modalNovoAcesso');
+        const btnCloseX = document.getElementById('btnCloseX');
+        const btnCancel = document.getElementById('btnCancel');
+        
+        // --- ABRIR MODAL NOVO ---
+        function openNewModal() {
+            // Limpa campos
+            document.getElementById('inputNome').value = '';
+            document.getElementById('inputEmail').value = '';
+            document.getElementById('selectPerfil').value = '';
+            document.getElementById('senhaInput').value = '';
+
+            // Reseta UI (Título e Botão)
+            document.getElementById('modalTitle').innerHTML = '<i data-lucide="user-plus" size="20"></i> Cadastrar Novo Acesso';
+            document.getElementById('btnSave').innerHTML = '<i data-lucide="check" size="18"></i> Salvar Acesso';
+            
+            // Remove erros
+            clearErrors();
+            
+            // Abre modal e re-renderiza ícones inseridos pelo innerHTML
+            modal.classList.add('show');
+            lucide.createIcons();
+        }
+
+        // --- ABRIR MODAL EDIÇÃO ---
+        function openEditModal(button) {
+            // Localiza a linha (TR) do botão clicado
+            const row = button.closest('tr');
+            
+            // Captura dados da linha
+            const email = row.querySelector('.col-email').innerText;
+            const nome = row.querySelector('.col-nome').innerText;
+            const perfilText = row.querySelector('.col-perfil').innerText.trim();
+
+            // Mapeia texto da tabela para valor do select
+            const perfilMap = {
+                'Admin': 'admin',
+                'Atendente': 'atendente',
+                'Voluntário': 'voluntario'
+            };
+
+            // Preenche campos
+            document.getElementById('inputNome').value = nome;
+            document.getElementById('inputEmail').value = email;
+            document.getElementById('selectPerfil').value = perfilMap[perfilText] || '';
+            document.getElementById('senhaInput').value = ''; // Senha vazia na edição
+
+            // Altera UI para "Modo Edição"
+            document.getElementById('modalTitle').innerHTML = '<i data-lucide="pencil" size="20"></i> Editar Acesso';
+            document.getElementById('btnSave').innerHTML = '<i data-lucide="save" size="18"></i> Atualizar';
+
+            // Remove erros
+            clearErrors();
+
+            // Abre modal
+            modal.classList.add('show');
+            lucide.createIcons();
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.required-field').forEach(inp => inp.classList.remove('error'));
+            document.querySelectorAll('.helper-text').forEach(h => h.classList.remove('visible'));
+        }
+
+        function closeModal() { modal.classList.remove('show'); }
+
+        // Event Listeners de Fechamento
+        btnCloseX.addEventListener('click', closeModal);
+        btnCancel.addEventListener('click', closeModal);
+
+        // --- Lógica de Filtro e Busca ---
+        function filterTable() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const filterType = document.getElementById('searchFilter').value;
+            const rows = document.querySelectorAll('.data-row');
+            let hasResults = false;
+
+            rows.forEach(row => {
+                let cellValue = "";
+                if (filterType === 'nome') cellValue = row.querySelector('.col-nome').textContent;
+                else if (filterType === 'email') cellValue = row.querySelector('.col-email').textContent;
+                else if (filterType === 'perfil') cellValue = row.querySelector('.col-perfil').textContent;
+                
+                if (cellValue.toLowerCase().includes(input)) {
+                    row.classList.remove('hidden');
+                    hasResults = true;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+            toggleEmptyState(!hasResults);
+        }
+
+        function toggleEmptyState(isEmpty) {
+            const tableContainer = document.getElementById('tableContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (isEmpty) {
+                tableContainer.style.display = 'none';
+                emptyState.classList.add('visible');
+            } else {
+                tableContainer.style.display = 'block';
+                emptyState.classList.remove('visible');
+            }
+        }
+
+        function setStatusFilter(status, element) {
+            document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('active'));
+            element.classList.add('active');
+            const rows = document.querySelectorAll('.data-row');
+            let hasResults = false;
+            rows.forEach(row => {
+                const rowStatus = row.querySelector('[data-status]').getAttribute('data-status');
+                if (status === 'todos' || (status === 'ativos' && rowStatus === 'ativo') || (status === 'inativos' && rowStatus === 'inativo')) {
+                    row.classList.remove('hidden');
+                    hasResults = true;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+            toggleEmptyState(!hasResults);
+        }
+    </script>
+</body>
+</html>
